@@ -31,8 +31,8 @@ class Temporal
     return false unless occurs_on_day?(datetime)
     if @type =~ /timerange/
       test_date = datetime.strftime("%Y-%m-%d")
-      test_start_time = Time.parse("#{test_date} #{@start_time.gsub(/([ap]m)$/,'')}#{start_pm? ? 'pm' : 'am'}")
-      test_end_time = Time.parse("#{test_date} #{@end_time}")
+      test_start_time = Time.zone.parse("#{test_date} #{@start_time.gsub(/([ap]m)$/,'')}#{start_pm? ? 'pm' : 'am'}")
+      test_end_time = Time.zone.parse("#{test_date} #{@end_time}")
       test_end_time = test_end_time+59 if test_end_time == test_start_time # If they're equal, they are assumed to be to the minute precision
       puts "TimeRange: date:#{test_date} test_start:#{test_start_time} test_end:#{test_end_time} <=> #{datetime}" if $DEBUG
       return false unless datetime.between?(test_start_time, test_end_time)
@@ -78,7 +78,7 @@ class Temporal
     if date
       @start_time.sub!(/^(\d+)/,'\1:00') if @start_time =~ /^(\d+)[^:]/
       puts "#{date.strftime("%Y-%m-%d")} #{@start_time}" if $DEBUG
-      Time.parse("#{date.strftime("%Y-%m-%d")} #{@start_time}")
+      Time.zone.parse("#{date.strftime("%Y-%m-%d")} #{@start_time}")
     else
       @start_time
     end
@@ -87,7 +87,7 @@ class Temporal
     if date
       @end_time.sub!(/^(\d+)/,'\1:00') if @end_time =~ /^(\d+)[^:]/
       puts "#{date.strftime("%Y-%m-%d")} #{@end_time}" if $DEBUG
-      Time.parse("#{date.strftime("%Y-%m-%d")} #{@end_time}")
+      Time.zone.parse("#{date.strftime("%Y-%m-%d")} #{@end_time}")
     else
       @end_time
     end
@@ -103,7 +103,7 @@ class Temporal
       #   if @ord.is_a?(Range)
       #     @ord.begin + 'th-' + @ord.end
       #   elsif @ord.is_a?(Array)
-      #     
+      #
       #   else
       #     @ord + 'th'
       #   end
