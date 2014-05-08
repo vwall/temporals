@@ -5,7 +5,7 @@ require 'temporal/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "temporals"
-  spec.version       = 2.0.1
+  spec.version       = '2.0.1'
   spec.authors       = ["Vincent Waller"]
   spec.email         = ["vrwaller@gmail.com"]
   spec.summary       = %q{'Tpmoral'}
