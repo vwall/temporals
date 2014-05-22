@@ -128,4 +128,29 @@ describe Temporal do
     t.include?(Time.parse('2010-03-02 2:10pm')).should eql(true)
     t.include?(Time.parse('2010-02-02 2:10pm')).should eql(false)
   end
+
+  it "should parse '2-3p monday and friday'" do
+    t = Temporal.parse("2-3p Monday - Friday")
+    t.include?(Time.parse('2014-05-12 2:14pm')).should eql(true)
+    t.include?(Time.parse('2014-05-11 2:14pm')).should eql(false)
+  end
+ 
+  it "should parse '2-3p m-f'" do
+    t = Temporal.parse("2-3p m-f")
+    t.include?(Time.parse('2014-05-12 2:14pm')).should eql(true)
+    t.include?(Time.parse('2014-05-11 2:14pm')).should eql(false)
+  end
+
+  it "should parse '2-3p s and sa'" do
+    t = Temporal.parse("2-3p s and sa")
+    t.include?(Time.parse('2014-05-11 2:14pm')).should eql(true)
+    t.include?(Time.parse('2014-05-12 2:14pm')).should eql(false)
+  end
+
+  it "should parse '2-3p m-f and sa'" do
+    t = Temporal.parse("2-3p m-f and sa")
+    t.include?(Time.parse('2014-05-11 2:14pm')).should eql(false)
+    t.include?(Time.parse('2014-05-12 2:14pm')).should eql(true)
+    t.include?(Time.parse('2014-05-17 2:14pm')).should eql(true)
+  end
 end

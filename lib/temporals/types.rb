@@ -2,7 +2,13 @@ class Temporal
   class ArrayOfRanges < Array
     def self.new(*values)
       n = allocate
-      n.push(*values)
+      values.each do |x|
+        if defined? x.flatten
+          n.push(*x.flatten)
+        else
+          n.push(x)
+        end
+      end
       n
     end
   end
@@ -39,6 +45,9 @@ class Temporal
     def ==(other)
       ord == other.ord && name == other.name
     end
+    def to_i
+      self.class.order.index(name)
+    end
   end
 
   class WDay < Classification
@@ -65,6 +74,7 @@ class Temporal
       'Sat' => 'Saturday'
     }
   end
+
   class Month < Classification
     @order = %w(January February March April May June July August September October November December)
     @translations = {
@@ -96,6 +106,7 @@ class Temporal
       @set = args.select {|e| e.is_a?(Temporal)}
     end
   end
+
   class Union < Set
     def initialize(*args)
       @type = 'UNION'
