@@ -147,6 +147,12 @@ describe Temporal do
     t.include?(Time.parse('2014-05-12 2:14pm')).should eql(false)
   end
 
+  it "should parse '2-3p s, sa'" do
+    t = Temporal.parse("2-3p s, sa")
+    t.include?(Time.parse('2014-05-11 2:14pm')).should eql(true)
+    t.include?(Time.parse('2014-05-12 2:14pm')).should eql(false)
+  end
+
   it "should parse '2-3p m-f and sa'" do
     t = Temporal.parse("2-3p m-f and sa")
     t.include?(Time.parse('2014-05-11 2:14pm')).should eql(false)

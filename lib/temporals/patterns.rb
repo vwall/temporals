@@ -8,6 +8,7 @@ class Temporal
     :month => /^#{(Month.order + Month.translations.keys).join('|')}$/i,
     :year => /^([09]\d|\d{4})$/, # A year will be either 2 digits starting with a 9 or a 0, or 4 digits.
     :union => /^(?:and)$/i,
+    :comma => /^(?:,)$/i,
     :range => /^(?:-|to|through)$/i,
     :timerange => /^(#{TimeRegexp}?)-(#{TimeRegexp})$/i,
     # :from => /^from$/i,
