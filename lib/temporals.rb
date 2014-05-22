@@ -7,7 +7,6 @@ require 'temporals/patterns'
 require 'temporals/parser'
 
 class Temporal
-  VERSION = '2.0.1'
 
   def initialize(options)
     options.each do |key,value|

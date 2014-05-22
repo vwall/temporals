@@ -5,9 +5,15 @@ class Temporal
       @expression = expression.to_s.dup
     end
 
+    def preprocess(s)
+      s.gsub!(/weekdays/, 'm-f')
+      s.gsub!(/weekends/, 's and sa')
+      s
+    end
+
     def normalized
       @normalized || begin
-        normalized = @expression.dup
+        normalized = preprocess(@expression.dup)
         # 1. Normalize the expression
         # TODO: re-create normalize: ' -&| ', 'time-time'
         normalized.gsub!(/[,]/,' , ')
