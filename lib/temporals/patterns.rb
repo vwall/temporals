@@ -8,6 +8,7 @@ class Temporal
     :month => /^#{(Month.order + Month.translations.keys).join('|')}$/i,
     :year => /^([09]\d|\d{4})$/, # A year will be either 2 digits starting with a 9 or a 0, or 4 digits.
     :union => /^(?:and)$/i,
+    :comma => /^(?:,)$/i,
     :range => /^(?:-|to|through)$/i,
     :timerange => /^(#{TimeRegexp}?)-(#{TimeRegexp})$/i,
     # :from => /^from$/i,
@@ -59,7 +60,7 @@ class Temporal
       words.slice!(i+1,2)
     },
     'wday range wday' => lambda {|words,i|
-      words[i][:wday] = (words[i][:wday].to_i..words[i+2][:wday].to_i)
+      words[i][:wday] = (words[i][:wday].to_i .. words[i+2][:wday].to_i).map {|d| WDay.new(d)}
       words.slice!(i+1,2)
     },
     'wday union wday' => lambda {|words,i|
@@ -96,8 +97,7 @@ class Temporal
       words.slice!(i+1,2)
     },
     'month range month' => lambda {|words,i|
-      # raise "Not Implemented Yet!"
-      words[i][:month] = (words[i][:month]..words[i+2][:month])
+      words[i][:month] = (words[i][:month].to_i .. words[i+2][:month].to_i).map {|d| Month.new(d)}
       words.slice!(i+1,2)
     },
     'ord_wday month' => lambda {|words,i|

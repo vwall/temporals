@@ -5,12 +5,19 @@ class Temporal
       @expression = expression.to_s.dup
     end
 
+    def preprocess(s)
+      s.gsub!(/weekdays/, 'm-f')
+      s.gsub!(/weekends/, 's and sa')
+      s
+    end
+
     def normalized
       @normalized || begin
-        normalized = @expression.dup
+        normalized = preprocess(@expression.dup)
         # 1. Normalize the expression
         # TODO: re-create normalize: ' -&| ', 'time-time'
-        normalized.gsub!(/[\s+,]/,' ')
+        normalized.gsub!(/[,]/,' , ')
+        normalized.gsub!(/[\s+]/,' ')
         # Pad special characters with spaces for now
         normalized.gsub!(/([\-\&\|])/,' \1 ')
         # Get rid of spaces between time ranges
@@ -78,6 +85,8 @@ class Temporal
             {:type => 'union'}
           when WordTypes[:range]
             {:type => 'range'}
+          when WordTypes[:comma]
+            {:type => 'comma'}
           when WordTypes[:timerange]
             # determine and inject am/pm
             start_at = $1
@@ -105,8 +114,21 @@ class Temporal
             {:type => 'timerange', :start_time => start_at, :end_time => end_at}
           end
         end.compact
-        @tokenized = tokenized
+
+        @tokenized = contextualize_commas(tokenized)
       end
+    end
+
+    def contextualize_commas(tokens)
+      tokens.each_with_index do |word, i|
+        next unless word[:type] == 'comma' 
+        if tokens[i-1][:type] == tokens[i+1][:type]
+          tokens[i][:type] = 'union'
+        else
+          tokens[i] = nil
+        end
+      end
+      tokens.compact
     end
 
     def language_patterns_combined
